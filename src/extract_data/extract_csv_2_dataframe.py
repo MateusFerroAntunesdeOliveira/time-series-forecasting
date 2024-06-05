@@ -1,10 +1,13 @@
-import pandas as pd
+import sys
 import os
 
-input_folder = "../readings/"
-output_folder = "../processed/"
+import pandas as pd
 
-os.makedirs(output_folder, exist_ok=True)
+current_dir = os.path.dirname(os.path.abspath(__file__))
+extract_dir = os.path.join(current_dir)
+sys.path.append(extract_dir)
+
+from extract_config import INPUT_CSV_FILE_PATH, OUTPUT_CSV_FILE_PATH, OUTPUT_MERGED_CSV_FILE_PATH
 
 # File List to be processed - Will be used to train the script
 filenames = [f"FATOR_CAPACIDADE-2_{year}_{month:02d}.csv" for year in range(2022, 2024) for month in range(1, 13)]
@@ -25,8 +28,8 @@ full_df = pd.DataFrame()
 def extract_dataframe_handler():
     for filename in filenames:
         # Full path of the input file
-        input_path = os.path.join(input_folder, filename)
-        processed_path = os.path.join(output_folder, f"processed_{filename}")
+        input_path = os.path.join(INPUT_CSV_FILE_PATH, filename)
+        processed_path = os.path.join(OUTPUT_CSV_FILE_PATH, f"processed_{filename}")
         
         if os.path.exists(processed_path):
             print(f"{filename} already processed. Skipping to the next file...")
@@ -47,7 +50,7 @@ def extract_dataframe_handler():
             
             # Full path of the output file
             output_filename = f"processed_{filename}"
-            output_path = os.path.join(output_folder, output_filename)
+            output_path = os.path.join(OUTPUT_CSV_FILE_PATH, output_filename)
             
             # Save the processed file
             df_alex_complex.to_csv(output_path, sep=";", index=False)
