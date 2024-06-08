@@ -18,8 +18,8 @@ formatter = colorlog.ColoredFormatter(
     LOG_LEVEL_FORMAT,
     datefmt='%Y-%m-%d %H:%M:%S',
     log_colors={
-        'DEBUG': 'blue',
-        'INFO': 'green',
+        'DEBUG': 'cyan',
+        'INFO': 'white',
         'WARNING': 'yellow',
         'ERROR': 'red',
         'CRITICAL': 'red,bg_white',
@@ -40,22 +40,26 @@ handler = logging.StreamHandler()
 handler.setFormatter(formatter)
 logger.addHandler(handler)
 
-# File List to be processed - Will be used to train the script
+# File List to be processed - Will be used to train the script & adding the first 5 months of 2024 - Will be used to test the script
 filenames = [f"FATOR_CAPACIDADE-2_{year}_{month:02d}.csv" for year in range(2022, 2024) for month in range(1, 13)]
-
-# Adding the first 5 months of 2024 - Will be used to test the script
 filenames.extend([f"FATOR_CAPACIDADE-2_2024_{month:02d}.csv" for month in range(1, 6)])
 
 # Columns to be removed
-columns_to_remove = ["id_subsistema", "nom_subsistema", "id_estado", "nom_localizacao", "val_latitudesecoletora", 
-                     "val_longitudesecoletora", "val_latitudepontoconexao", "val_longitudepontoconexao", "id_ons", "ceg"]
+columns_to_remove = ["id_subsistema", "nom_subsistema", "id_estado", "nom_localizacao", "val_latitudesecoletora", "val_longitudesecoletora", "val_latitudepontoconexao", "val_longitudepontoconexao", "id_ons", "ceg"]
 
 # Complex name and State Name to be filtered
 complex_name = "Conj. Alex"
 state_name = "CE"
 
+# Column to be used as the reading date - primary key
+reading_date_column = "din_instante"
+
 # Dataframe to store all the processed data
 df_all = pd.DataFrame()
+
+def create_and_check_directory(directory):
+    if not os.path.exists(directory):
+        os.makedirs(directory)
 
 def join_file_path(path, filename):
     return os.path.join(path, filename)
@@ -78,6 +82,14 @@ def remove_columns(df, columns_to_remove):
 def filter_by_complex_name(df, complex_name):
     logger.debug(f"Filtering data by complex name {complex_name}")
     return df[df["nom_usina_conjunto"] == complex_name]
+
+def remove_duplicates(df, column_name):
+    logger.debug(f"Removing duplicates based on column {column_name}")
+    return df.drop_duplicates(subset=[column_name])
+
+def check_missing_values(df):
+    logger.debug("Checking for missing values")
+    return df.isnull().sum()
 
 def save_csv_file(df, filepath):
     logger.debug(f"Saving file {filepath}")
@@ -103,6 +115,10 @@ def process_files():
     global df_all
     logger.info("Starting file processing...")
 
+    # Create the output directories if they don't exist
+    create_and_check_directory(OUTPUT_PATH)
+    create_and_check_directory(OUTPUT_MERGED_PATH)
+
     # Load the already processed data
     load_processed_data()
 
@@ -120,6 +136,7 @@ def process_files():
                 df = filter_by_state(df, state_name)
                 df = remove_columns(df, columns_to_remove)
                 df = filter_by_complex_name(df, complex_name)
+                df = remove_duplicates(df, reading_date_column)
                 save_csv_file(df, processed_file_path)
                 logger.info(f"File {filename} processed and saved.")
 
@@ -134,10 +151,15 @@ def process_files():
     save_csv_file(df_all, join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME))
     logger.info("Merged file saved successfully.")
     logger.info("Processing finished.")
-
-
-# TODO:
-# Fazer com que a Coluna "din_instante" (que é a data e hora da leitura) seja como se fosse um identificador primário, onde não pode haver duplicatas
+    
+    # Check for missing values
+    missing_values = check_missing_values(df_all)
+    logger.info(f"Missing values:\n{missing_values}")
 
 # TODO:
 # Mover a parte de Log para um arquivo de configuração de log específico
+
+# TODO:
+# Atualmente eu executo o programa executando "python src/main.py".
+# Quero passar parâmetros para o programa, como por exemplo especificar se quero fazer a extração ou não.
+# Para isso, vou usar a biblioteca argparse do Python.
