@@ -39,6 +39,10 @@ root_logger = logging.getLogger()
 if root_logger.handlers:
     root_logger.handlers.clear()
 
+# Set the logging level for matplotlib and PIL to WARNING to avoid excessive debug output
+logging.getLogger('matplotlib').setLevel(logging.WARNING)
+logging.getLogger('PIL.PngImagePlugin').setLevel(logging.WARNING)
+
 # Create a new handler and set the colored formatter
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
