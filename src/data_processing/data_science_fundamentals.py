@@ -1,9 +1,6 @@
 import sys
 import os
 
-import logging
-import colorlog
-
 import pandas as pd
 
 # Define file paths
@@ -11,34 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-from data_processing.data_processing_config import LOG_LEVEL, LOG_LEVEL_FORMAT, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
-
-# Create a color log formatter
-formatter = colorlog.ColoredFormatter(
-    LOG_LEVEL_FORMAT,
-    datefmt='%Y-%m-%d %H:%M:%S',
-    log_colors={
-        'DEBUG': 'cyan',
-        'INFO': 'white',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'red,bg_white',
-    }
-)
-
-# Configure the logger
-logging.basicConfig(level=LOG_LEVEL)
-logger = logging.getLogger()
-
-# Remove all handlers from the root logger
-root_logger = logging.getLogger()
-if root_logger.handlers:
-    root_logger.handlers.clear()
-
-# Create a new handler and set the colored formatter
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+from data_processing.data_processing_config import OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, logger
 
 def join_file_path(path, filename):
     return os.path.join(path, filename)

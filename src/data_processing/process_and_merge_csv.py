@@ -1,9 +1,6 @@
 import sys
 import os
 
-import logging
-import colorlog
-
 import pandas as pd
 
 # Define file paths
@@ -11,34 +8,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-from data_processing.data_processing_config import LOG_LEVEL, LOG_LEVEL_FORMAT, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
-
-# Create a color log formatter
-formatter = colorlog.ColoredFormatter(
-    LOG_LEVEL_FORMAT,
-    datefmt='%Y-%m-%d %H:%M:%S',
-    log_colors={
-        'DEBUG': 'cyan',
-        'INFO': 'white',
-        'WARNING': 'yellow',
-        'ERROR': 'red',
-        'CRITICAL': 'red,bg_white',
-    }
-)
-
-# Configure the logger
-logging.basicConfig(level=LOG_LEVEL)
-logger = logging.getLogger()
-
-# Remove all handlers from the root logger
-root_logger = logging.getLogger()
-if root_logger.handlers:
-    root_logger.handlers.clear()
-
-# Create a new handler and set the colored formatter
-handler = logging.StreamHandler()
-handler.setFormatter(formatter)
-logger.addHandler(handler)
+from data_processing.data_processing_config import INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, logger
 
 # File List to be processed - Will be used to train the script & adding the first 5 months of 2024 - Will be used to test the script
 filenames = [f"FATOR_CAPACIDADE-2_{year}_{month:02d}.csv" for year in range(2022, 2024) for month in range(1, 13)]
