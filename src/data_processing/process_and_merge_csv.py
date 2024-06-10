@@ -11,7 +11,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-from extract_data.process_and_merge_csv_config import LOG_LEVEL, LOG_LEVEL_FORMAT, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from data_processing.process_and_merge_csv_config import LOG_LEVEL, LOG_LEVEL_FORMAT, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
 
 # Create a color log formatter
 formatter = colorlog.ColoredFormatter(
@@ -95,6 +95,10 @@ def save_csv_file(df, filepath):
     logger.debug(f"Saving file {filepath}")
     df.to_csv(filepath, sep=";", index=False)
 
+def merge_files(df_all, df):
+    logger.debug("Merging dataframes")
+    return pd.concat([df_all, df], ignore_index=True)
+
 def load_processed_data():
     global df_all
     merged_file_path = join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
@@ -141,7 +145,8 @@ def process_files():
                 logger.info(f"File {filename} processed and saved.")
 
                 # Merge the processed data to the main dataframe
-                df_all = pd.concat([df_all, df], ignore_index=True)
+                df_all = merge_files(df_all, df)
+
             except Exception as e:
                 logger.error(f"Error processing file {filename}. Error: {e}")
         else:
@@ -158,8 +163,3 @@ def process_files():
 
 # TODO:
 # Mover a parte de Log para um arquivo de configuração de log específico
-
-# TODO:
-# Atualmente eu executo o programa executando "python src/main.py".
-# Quero passar parâmetros para o programa, como por exemplo especificar se quero fazer a extração ou não.
-# Para isso, vou usar a biblioteca argparse do Python.
