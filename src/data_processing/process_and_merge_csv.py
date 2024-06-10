@@ -11,7 +11,7 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-from data_processing.process_and_merge_csv_config import LOG_LEVEL, LOG_LEVEL_FORMAT, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from data_processing.data_processing_config import LOG_LEVEL, LOG_LEVEL_FORMAT, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
 
 # Create a color log formatter
 formatter = colorlog.ColoredFormatter(
@@ -87,10 +87,6 @@ def remove_duplicates(df, column_name):
     logger.debug(f"Removing duplicates based on column {column_name}")
     return df.drop_duplicates(subset=[column_name])
 
-def check_missing_values(df):
-    logger.debug("Checking for missing values")
-    return df.isnull().sum()
-
 def save_csv_file(df, filepath):
     logger.debug(f"Saving file {filepath}")
     df.to_csv(filepath, sep=";", index=False)
@@ -156,10 +152,6 @@ def process_files():
     save_csv_file(df_all, join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME))
     logger.info("Merged file saved successfully.")
     logger.info("Processing finished.")
-    
-    # Check for missing values
-    missing_values = check_missing_values(df_all)
-    logger.info(f"Missing values:\n{missing_values}")
 
 # TODO:
 # Mover a parte de Log para um arquivo de configuração de log específico
