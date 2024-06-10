@@ -14,3 +14,6 @@ state_name = "CE"
 
 # Column to be used as the reading date - primary key
 reading_date_column = "din_instante"
+
+# Column to be used as the value to be predicted
+target_column = "val_fatorcapacidade"
