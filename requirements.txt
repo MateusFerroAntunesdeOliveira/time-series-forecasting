@@ -1,2 +1,4 @@
 python-dotenv
 colorlog
+matplotlib
+seaborn
