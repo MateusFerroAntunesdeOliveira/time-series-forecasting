@@ -5,8 +5,8 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import ppscore as pps
 
-from data_processing.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
-from data_processing.load_constants import target_column
+from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from utility.load_constants import target_column
 import utility.utils as utils
 
 # Define file paths

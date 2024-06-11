@@ -2,8 +2,8 @@ import sys
 import os
 import pandas as pd
 
-from data_processing.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
-from load_constants import target_column
+from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from utility.load_constants import target_column
 import utility.utils as utils
 
 # Define file paths

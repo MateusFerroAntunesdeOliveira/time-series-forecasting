@@ -8,8 +8,8 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-from data_processing.config import logger, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, OUTPUT_FILTERED_MERGED_FILENAME
-from data_processing.load_constants import filenames, columns_to_remove, complex_name, state_name, reading_date_column
+from utility.config import logger, INPUT_PATH, OUTPUT_PATH, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, OUTPUT_FILTERED_MERGED_FILENAME
+from utility.load_constants import filenames, columns_to_remove, complex_name, state_name, reading_date_column
 import utility.utils as utils
 
 # df_all to store the merged dataframes with all columns
