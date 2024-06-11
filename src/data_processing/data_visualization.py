@@ -18,8 +18,8 @@ def read_csv_file_as_dataframe(file_path):
     logger.debug(f"Reading file {file_path}")
     return pd.read_csv(file_path, sep=";", encoding="utf-8")
 
-def filter_zero_values(df, column_name):
-    logger.debug("Filtering zero values")
+def remove_zero_values(df, column_name):
+    logger.debug("Removing zero values")
     return df[df[column_name] != 0]
 
 def apply_statistics(df):
@@ -56,7 +56,7 @@ def remove_constant_columns(df):
 
 def get_pearson_correlation(df, method="pearson"):
     logger.debug("Calculating Pearson correlation")
-    return df.corr(method=method)
+    return df.corr(method=method, numeric_only=True)
 
 def get_predictive_power_score_correlation(df):
     logger.debug("Calculating Predictive Power Score (PPS) correlation")
@@ -76,24 +76,24 @@ def plot_correlation_matrix(corr, title):
 
 def apply_measures():
     logger.info("Applying measures")
-    merged_csv_file = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
+    full_merged_csv_file = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
 
     # Describe the dataset & Plot symmetry with original dataset
-    df_all = read_csv_file_as_dataframe(merged_csv_file)
+    df_all = read_csv_file_as_dataframe(full_merged_csv_file)
     summary_stats = apply_statistics(df_all)
     logger.info(f"Summary Statistics with original dataset:\n{summary_stats}")
     plot_symmetry(df_all, target_column)
 
-    # Filter zero values before applying statistics - In this case, the zero values are not good for the analysis
-    # Describe the dataset & Plot symmetry with filtered dataset
-    df_filtered = filter_zero_values(df_all, target_column)
-    summary_stats = apply_statistics(df_filtered)
-    logger.info(f"Summary Statistics with filtered dataset:\n{summary_stats}")
-    plot_symmetry(df_filtered, target_column)
+    # Remove zero values before applying statistics - In this case, the zero values are not good for the analysis
+    # Describe the dataset & Plot symmetry with the dataset without zero values
+    df_without_zero = remove_zero_values(df_all, target_column)
+    summary_stats = apply_statistics(df_without_zero)
+    logger.info(f"Summary Statistics with dataset without zero values:\n{summary_stats}")
+    plot_symmetry(df_without_zero, target_column)
 
-    # Plot correlation heatmap with filtered dataset
+    # Plot correlation heatmap
     logger.info("Plotting correlation heatmap")
-    df = remove_constant_columns(df)
+    df = remove_constant_columns(df_all)
     correlation = get_pearson_correlation(df)
     pps_correlation = get_predictive_power_score_correlation(df)
     plot_correlation_matrix(correlation, "Pearson Correlation matrix")
