@@ -28,14 +28,7 @@ def apply_statistics(df):
 def plot_symmetry(df, column_name):
     logger.info("Plotting symmetry")
     mean, median, mode = evaluate_mean_median_mode(df, column_name)
-    plot_graph(df, mean, median, mode, column_name)
-    logger.info("Symmetry plot created")
 
-def evaluate_mean_median_mode(df, column_name):
-    logger.info("Evaluating mean, median, and mode")
-    return df[column_name].mean(), df[column_name].median(), df[column_name].mode()[0]
-
-def plot_graph(df, mean, median, mode, column_name):
     plt.figure(figsize=(10, 6))
     # Kernel Density Estimation (KDE) is a way to estimate the probability density function of a continuous random variable.
     sns.histplot(df[column_name], bins=30, kde=True, color='blue', stat='density')
@@ -47,7 +40,15 @@ def plot_graph(df, mean, median, mode, column_name):
     plt.ylabel('Density')
     plt.legend()
     plt.show()
+    logger.info("Symmetry plot created")
 
+# TODO:
+# Create more functions to plot other types of visualizations (e.g., boxplot, scatterplot, heatmap, histogram, etc.)
+
+def evaluate_mean_median_mode(df, column_name):
+    logger.info("Evaluating mean, median, and mode")
+    return df[column_name].mean(), df[column_name].median(), df[column_name].mode()[0]
+    
 def apply_measures():
     logger.info("Applying measures")
 
