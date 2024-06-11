@@ -2,3 +2,4 @@ python-dotenv
 colorlog
 matplotlib
 seaborn
+scikit-learn
