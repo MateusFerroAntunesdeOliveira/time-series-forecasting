@@ -17,10 +17,6 @@ def read_csv_file_as_dataframe(file_path):
     logger.debug(f"Reading file {file_path}")
     return pd.read_csv(file_path, sep=';', encoding='utf-8')
 
-def check_missing_values(df):
-    logger.debug("Checking for missing values")
-    return df.isnull().sum()
-
 def filter_zero_values(df, column_name):
     logger.info("Filtering zero values")
     return df[df[column_name] != 0]
@@ -58,15 +54,12 @@ def apply_measures():
     merged_csv_file = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
     df_all = read_csv_file_as_dataframe(merged_csv_file)
 
+    # Filter zero values before applying statistics - In this case, the zero values are not good for the analysis
     df_filtered = filter_zero_values(df_all, target_column)
 
     # Describe the dataset
     summary_stats = apply_statistics(df_filtered)
     logger.info(f"Summary Statistics:\n{summary_stats}")
-    
-    # Check for missing values
-    missing_values = check_missing_values(df_all)
-    logger.info(f"Missing values:\n{missing_values}")
 
     # Plot symmetry
     plot_symmetry(df_filtered, target_column)
