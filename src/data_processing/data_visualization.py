@@ -14,10 +14,6 @@ current_dir = os.path.dirname(os.path.abspath(__file__))
 extract_dir = os.path.join(current_dir)
 sys.path.append(extract_dir)
 
-def read_csv_file_as_dataframe(file_path):
-    logger.debug(f"Reading file {file_path}")
-    return pd.read_csv(file_path, sep=";", encoding="utf-8")
-
 def remove_zero_values(df, column_name):
     logger.debug("Removing zero values")
     return df[df[column_name] != 0]
@@ -79,7 +75,7 @@ def apply_measures():
     full_merged_csv_file = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
 
     # Describe the dataset & Plot symmetry with original dataset
-    df_all = read_csv_file_as_dataframe(full_merged_csv_file)
+    df_all = utils.read_csv_file_as_dataframe(full_merged_csv_file)
     summary_stats = apply_statistics(df_all)
     logger.info(f"Summary Statistics with original dataset:\n{summary_stats}")
     plot_symmetry(df_all, target_column)
