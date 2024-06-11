@@ -3,6 +3,7 @@ import os
 import pandas as pd
 
 from data_processing.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from load_constants import target_column
 import utility.utils as utils
 
 # Define file paths
@@ -23,6 +24,11 @@ def check_missing_values(df):
 def impute_values(df):
     pass
 
+# TODO:
+# Create a function to plot outliers using Z-score
+def plot_outliers(df, column_name):
+    pass
+
 def clean_data():
     logger.info("Cleaning data")
 
@@ -35,5 +41,8 @@ def clean_data():
     
     # Impute missing values
     impute_values(df_all)
+    
+    # Plot outliers
+    plot_outliers(df_all, target_column)
 
     logger.info("Data cleaning completed")
