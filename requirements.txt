@@ -3,3 +3,4 @@ colorlog
 matplotlib
 seaborn
 scikit-learn
+ppscore
