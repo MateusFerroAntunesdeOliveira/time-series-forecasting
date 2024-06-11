@@ -54,14 +54,17 @@ def apply_measures():
     merged_csv_file = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME)
     df_all = read_csv_file_as_dataframe(merged_csv_file)
 
+    # Describe the dataset & Plot symmetry with original dataset
+    summary_stats = apply_statistics(df_all)
+    logger.info(f"Summary Statistics with original dataset:\n{summary_stats}")
+    plot_symmetry(df_all, target_column)
+
     # Filter zero values before applying statistics - In this case, the zero values are not good for the analysis
     df_filtered = filter_zero_values(df_all, target_column)
 
-    # Describe the dataset
+    # Describe the dataset & Plot symmetry with filtered dataset
     summary_stats = apply_statistics(df_filtered)
-    logger.info(f"Summary Statistics:\n{summary_stats}")
-
-    # Plot symmetry
+    logger.info(f"Summary Statistics with filtered dataset:\n{summary_stats}")
     plot_symmetry(df_filtered, target_column)
 
     logger.info("Measures applied")
