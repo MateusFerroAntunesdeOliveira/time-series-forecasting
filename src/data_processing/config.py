@@ -16,6 +16,7 @@ INPUT_PATH = os.getenv("INPUT_PATH")
 OUTPUT_PATH = os.getenv("OUTPUT_PATH")
 OUTPUT_MERGED_PATH = os.getenv("OUTPUT_MERGED_PATH")
 OUTPUT_MERGED_FILENAME = os.getenv("OUTPUT_MERGED_FILENAME")
+OUTPUT_FILTERED_MERGED_FILENAME = os.getenv("OUTPUT_FILTERED_MERGED_FILENAME")
 
 # Create a color log formatter
 formatter = colorlog.ColoredFormatter(
