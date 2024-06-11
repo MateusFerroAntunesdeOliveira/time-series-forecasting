@@ -5,8 +5,9 @@ filenames = [f"FATOR_CAPACIDADE-2_{year}_{month:02d}.csv" for year in range(2022
 filenames.extend([f"FATOR_CAPACIDADE-2_2024_{month:02d}.csv" for month in range(1, 6)])
 
 # Columns to be removed
-columns_to_remove = ["id_subsistema", "nom_subsistema", "id_estado", "nom_localizacao", "val_latitudesecoletora", 
-                    "val_longitudesecoletora", "val_latitudepontoconexao", "val_longitudepontoconexao", "id_ons", "ceg"]
+columns_to_remove = ["id_subsistema", "nom_subsistema", "id_estado", "nom_estado", "nom_pontoconexao", "nom_localizacao", "val_latitudesecoletora", 
+                    "val_longitudesecoletora", "val_latitudepontoconexao", "val_longitudepontoconexao", "nom_modalidadeoperacao", "nom_tipousina",
+                    "nom_usina_conjunto", "id_ons", "ceg", "din_instante"]
 
 # Complex name and State Name to be filtered
 complex_name = "Conj. Alex"

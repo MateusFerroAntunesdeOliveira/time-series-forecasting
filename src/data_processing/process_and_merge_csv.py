@@ -82,9 +82,9 @@ def process_files():
             try:
                 df = read_csv_file(input_file_path)
                 df = filter_by_state(df, state_name)
-                df = remove_columns(df, columns_to_remove)
                 df = filter_by_complex_name(df, complex_name)
                 df = remove_duplicates(df, reading_date_column)
+                df = remove_columns(df, columns_to_remove)
                 save_csv_file(df, processed_file_path)
                 logger.info(f"File {filename} processed and saved.")
 
