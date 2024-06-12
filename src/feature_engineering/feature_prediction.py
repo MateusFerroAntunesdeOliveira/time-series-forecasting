@@ -120,7 +120,7 @@ def show_best_results(results, metric):
         logger.info(f"{metric}: {results[max_clf][max(results[max_clf], key=lambda y: results[max_clf][y][metric])][metric]:.5f}")
     return max_clf
 
-def apply_classification():
+def apply_feature_prediction_classification():
     logger.info("Applying classification")
     
     # Read the filtered merged file
