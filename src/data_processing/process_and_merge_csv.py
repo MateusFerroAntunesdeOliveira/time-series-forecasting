@@ -37,10 +37,6 @@ def remove_duplicates(df, column_name):
     logger.debug(f"Removing duplicates based on column {column_name}")
     return df.drop_duplicates(subset=[column_name])
 
-def save_csv_file(df, filepath):
-    logger.debug(f"Saving file {filepath}")
-    df.to_csv(filepath, sep=";", index=False)
-
 def merge_files(df_all, df):
     logger.debug("Merging dataframes")
     return pd.concat([df_all, df], ignore_index=True)
@@ -96,10 +92,10 @@ def process_files():
                 df = filter_by_state(df, state_name)
                 df = filter_by_complex_name(df, complex_name)
                 df = remove_duplicates(df, reading_date_column)
-                save_csv_file(df, processed_file_path)
+                utils.save_csv_file(df, processed_file_path)
 
                 df_filtered = remove_columns(df, columns_to_remove)
-                save_csv_file(df, processed_filtered_file_path)
+                utils.save_csv_file(df, processed_filtered_file_path)
 
                 logger.info(f"File {filename} processed and saved.")
 
@@ -113,7 +109,7 @@ def process_files():
             logger.error(f"File {filename} not found.")
 
     # Save the merged dataframe to a CSV file
-    save_csv_file(df_all, utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME))
-    save_csv_file(df_all_filtered, utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME))
+    utils.save_csv_file(df_all, utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME))
+    utils.save_csv_file(df_all_filtered, utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME))
     logger.info("Merged file saved successfully.")
     logger.info("Processing finished.")

@@ -16,3 +16,7 @@ def check_file_exists(filepath):
 def read_csv_file_as_dataframe(file_path):
     logger.debug(f"Reading file {file_path}")
     return pd.read_csv(file_path, sep=";", encoding="utf-8")
+
+def save_csv_file(df, filepath):
+    logger.debug(f"Saving file {filepath}")
+    df.to_csv(filepath, sep=";", index=False)
