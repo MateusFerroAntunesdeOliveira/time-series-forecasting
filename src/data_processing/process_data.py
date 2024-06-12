@@ -25,10 +25,6 @@ def filter_by_state(df, state_name):
     logger.debug(f"Filtering data by state {state_name}")
     return df[df["id_estado"] == state_name]
 
-def remove_columns(df, columns_to_remove):
-    logger.debug(f"Removing columns {columns_to_remove}")
-    return df.drop(columns=columns_to_remove)
-
 def filter_by_complex_name(df, complex_name):
     logger.debug(f"Filtering data by complex name {complex_name}")
     return df[df["nom_usina_conjunto"] == complex_name]
@@ -94,8 +90,8 @@ def process_files():
                 df = remove_duplicates(df, reading_date_column)
                 utils.save_csv_file(df, processed_file_path)
 
-                df_filtered = remove_columns(df, columns_to_remove)
-                utils.save_csv_file(df, processed_filtered_file_path)
+                df_filtered = utils.remove_columns(df, columns_to_remove)
+                utils.save_csv_file(df_filtered, processed_filtered_file_path)
 
                 logger.info(f"File {filename} processed and saved.")
 
