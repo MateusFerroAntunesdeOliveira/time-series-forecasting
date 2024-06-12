@@ -11,16 +11,25 @@ load_dotenv()
 LOG_LEVEL = os.getenv("LOG_LEVEL")
 LOG_LEVEL_FORMAT = os.getenv("LOG_LEVEL_FORMAT")
 
-# Access the file environment variables
+# Default Input Data
 INPUT_PATH = os.getenv("INPUT_PATH")
 
+# Default Splited Data
 OUTPUT_PATH = os.getenv("OUTPUT_PATH")
+
+# Default Merged Data
 OUTPUT_MERGED_PATH = os.getenv("OUTPUT_MERGED_PATH")
 OUTPUT_MERGED_FILENAME = os.getenv("OUTPUT_MERGED_FILENAME")
 
+# Filtered Merged Data - Excluding predefined columns
 OUTPUT_FILTERED_MERGED_FILENAME = os.getenv("OUTPUT_FILTERED_MERGED_FILENAME")
 
+# Merged Data with Selected Features
 OUTPUT_SELECTED_FEATURES_FILENAME = os.getenv("OUTPUT_SELECTED_FEATURES_FILENAME")
+
+# EDA Report File
+OUTPUT_EDA_REPORT_PATH = os.getenv("OUTPUT_EDA_REPORT_PATH")
+OUTPUT_EDA_REPORT_FILENAME = os.getenv("OUTPUT_EDA_REPORT_FILENAME")
 
 # Create a color log formatter
 formatter = colorlog.ColoredFormatter(
