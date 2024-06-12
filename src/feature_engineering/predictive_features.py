@@ -109,6 +109,17 @@ def get_best_classifier(results, metric):
         return None
     return max(results, key=lambda x: results[x][max(results[x], key=lambda y: results[x][y][metric])][metric])
 
+def show_best_results(results, metric):
+    """Show the best results."""
+    if not results:
+        logger.error("No results to evaluate.")
+        return None
+    max_clf = get_best_classifier(results, metric)
+    if max_clf:
+        logger.info(f"Classifier with highest {metric}: {max_clf}")
+        logger.info(f"{metric}: {results[max_clf][max(results[max_clf], key=lambda y: results[max_clf][y][metric])][metric]:.5f}")
+    return max_clf
+
 def apply_classification():
     logger.info("Applying classification")
     
@@ -135,16 +146,8 @@ def apply_classification():
         clf_results = perform_iteration_over_transformations(transformations, clf, y_discretized, folds)
         results[clf_name] = clf_results
 
-    if results:
-        max_accuracy_clf = get_best_classifier(results, "accuracy")
-        max_f1_score_clf = get_best_classifier(results, "f1_score")
-
-        if max_accuracy_clf:
-            logger.info(f"Classifier with highest accuracy: {max_accuracy_clf}")
-            logger.info(f"Accuracy: {results[max_accuracy_clf][max(results[max_accuracy_clf], key=lambda y: results[max_accuracy_clf][y]['accuracy'])]['accuracy']:.5f}")
-
-        if max_f1_score_clf:
-            logger.info(f"Classifier with highest F1-score: {max_f1_score_clf}")
-            logger.info(f"F1-score: {results[max_f1_score_clf][max(results[max_f1_score_clf], key=lambda y: results[max_f1_score_clf][y]['f1_score'])]['f1_score']:.5f}")
-
+    # Show the results
+    show_best_results(results, "accuracy")
+    show_best_results(results, "f1_score")
+    
     logger.info("="*70)
