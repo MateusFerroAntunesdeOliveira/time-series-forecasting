@@ -6,7 +6,7 @@ import pandas as pd
 from sklearn.feature_selection import VarianceThreshold
 
 # Custom Imports
-from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME
+from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, OUTPUT_SELECTED_FEATURES_FILENAME
 import utility.utils as utils
 
 # Define file paths
@@ -67,12 +67,24 @@ def apply_feature_selection():
     selected_features_correlation, corr_df = feature_selection_based_on_correlation(df, correlation_threshold=0.5)
     logger.info("")
     logger.info(f"Selected features based on correlation: {selected_features_correlation}")
-    logger.info(f"DataFrame shape based on correlation: {corr_df.shape}")
-    logger.info(f"DataFrame Features: {corr_df.columns.to_list()}")
+    logger.debug(f"DataFrame shape based on correlation: {corr_df.shape}")
+    logger.debug(f"DataFrame Features: {corr_df.columns.to_list()}")
 
     # Perform feature selection based on variance
     selected_features_variance, var_df = feature_selection_based_on_variance(df, variance_threshold=0.1)
     logger.info("")
     logger.info(f"Selected features based on variance: {selected_features_variance}")
-    logger.info(f"DataFrame shape based on variance: {var_df.shape}")
-    logger.info(f"DataFrame Features: {var_df.columns.to_list()}")
+    logger.debug(f"DataFrame shape based on variance: {var_df.shape}")
+    logger.debug(f"DataFrame Features: {var_df.columns.to_list()}")
+
+    # Combine selected features from both methods
+    combined_features = list(set(selected_features_correlation + selected_features_variance))
+    combined_df = create_dataframe_with_selected_features(df, combined_features)
+    logger.info("")
+    logger.debug(f"DataFrame shape based on combined features: {combined_df.shape}")
+    
+    # Save the combined DataFrame to a CSV file
+    output_file_path = utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_SELECTED_FEATURES_FILENAME)
+    utils.save_csv_file(combined_df, output_file_path)
+    logger.debug(f"Selected features saved to {output_file_path}")
+    
