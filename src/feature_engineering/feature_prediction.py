@@ -17,6 +17,7 @@ from sklearn.svm import SVC
 from sklearn.neural_network import MLPClassifier
 
 # Custom Imports
+from utility.load_constants import reading_date_column
 from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME
 import utility.utils as utils
 
@@ -125,6 +126,7 @@ def apply_feature_prediction_classification():
     
     # Read the filtered merged file
     df = utils.read_csv_file_as_dataframe(utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME))
+    df = utils.remove_columns(df, reading_date_column)
     
     # Assuming the last column is the target variable (val_fatorcapacidade)
     X = df.iloc[:, :-1].values
