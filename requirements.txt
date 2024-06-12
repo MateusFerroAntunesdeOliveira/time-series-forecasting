@@ -4,3 +4,5 @@ matplotlib
 seaborn
 scikit-learn
 ppscore
+numba==0.58.1
+ydata-profiling
