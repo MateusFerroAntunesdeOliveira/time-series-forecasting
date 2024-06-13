@@ -3,6 +3,7 @@ import data_processing.data_cleaning as data_cleaning
 import data_processing.data_visualization as data_visualization
 import feature_engineering.feature_prediction as feature_prediction
 import feature_engineering.feature_selection as feature_selection
+import feature_engineering.pca_analysis as pca_analysis
 import exploratory_data_analysis.data_exploration as data_exploration
 
 def main():
@@ -11,6 +12,7 @@ def main():
     data_visualization.apply_measures()
     feature_prediction.apply_feature_prediction_classification()
     feature_selection.apply_feature_selection()
+    pca_analysis.apply_pca_analysis()
     data_exploration.explore_data()
 
 if __name__ == "__main__":
