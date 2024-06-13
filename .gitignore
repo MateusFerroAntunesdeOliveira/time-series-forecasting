@@ -163,3 +163,4 @@ cython_debug/
 
 # CSV Readings
 readings/
+output/
