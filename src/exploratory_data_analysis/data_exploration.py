@@ -1,6 +1,14 @@
+import sys
+import os
+
 import pandas as pd
 
 from ydata_profiling import ProfileReport
+
+# Define file paths
+current_dir = os.path.dirname(os.path.abspath(__file__))
+extract_dir = os.path.join(current_dir)
+sys.path.append(extract_dir)
 
 from utility.load_constants import reading_date_column, datetime_format
 from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, OUTPUT_FILTERED_MERGED_FILENAME, OUTPUT_EDA_REPORT_PATH, OUTPUT_EDA_REPORT_FILENAME
