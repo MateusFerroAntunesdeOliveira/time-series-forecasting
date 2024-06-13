@@ -2,7 +2,7 @@ import pandas as pd
 
 from ydata_profiling import ProfileReport
 
-from utility.load_constants import reading_date_column
+from utility.load_constants import reading_date_column, datetime_format
 from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_MERGED_FILENAME, OUTPUT_FILTERED_MERGED_FILENAME, OUTPUT_EDA_REPORT_PATH, OUTPUT_EDA_REPORT_FILENAME
 import utility.utils as utils
 
@@ -20,13 +20,13 @@ def perform_eda():
     logger.info(f"Loaded Filtered Merged DataFrame: {OUTPUT_FILTERED_MERGED_FILENAME} with shape: {df_filtered.shape}")
 
     # Read the filtered merged file for first month
-    df_filtered_first_month = utils.read_csv_file_as_dataframe(utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME))
-    df_filtered_first_month = df_filtered_first_month.head(720)
+    df_first_month = utils.read_csv_file_as_dataframe(utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME))
+    df_first_month = df_first_month.head(744)
 
     # Convert columns to appropriate data types
-    df_all[reading_date_column] = pd.to_datetime(df_all[reading_date_column], format='%Y-%m-%d %H:%M:%S')
-    df_filtered[reading_date_column] = pd.to_datetime(df_filtered[reading_date_column], format='%Y-%m-%d %H:%M:%S')
-    df_filtered_first_month[reading_date_column] = pd.to_datetime(df_filtered_first_month[reading_date_column], format='%Y-%m-%d %H:%M:%S')
+    df_all[reading_date_column] = pd.to_datetime(df_all[reading_date_column], format=datetime_format)
+    df_filtered[reading_date_column] = pd.to_datetime(df_filtered[reading_date_column], format=datetime_format)
+    df_first_month[reading_date_column] = pd.to_datetime(df_first_month[reading_date_column], format=datetime_format)
 
     # Perfome EDA using ydata_profiling
     logger.info("Performing EDA using ydata_profiling")
@@ -42,7 +42,7 @@ def perform_eda():
 
     # Perfome EDA using ydata_profiling with time series mode with only 1 month range
     logger.info("Performing EDA using ydata_profiling with time series mode with only 1 month range")
-    profile = ProfileReport(df_filtered_first_month, title="EDA Report with TS mode for 1 month range", tsmode=True, sortby=reading_date_column)
+    profile = ProfileReport(df_first_month, title="EDA Report with TS mode for 1 month range", tsmode=True, sortby=reading_date_column)
     profile.to_file(utils.join_file_path(OUTPUT_EDA_REPORT_PATH, OUTPUT_EDA_REPORT_FILENAME.replace(".html", "_ts_1m.html")))
     logger.info(f"EDA Report with TS mode for 1 month range saved to: {OUTPUT_EDA_REPORT_FILENAME.replace('.html', '_ts_1m.html')}")
 

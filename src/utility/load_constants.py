@@ -18,3 +18,6 @@ reading_date_column = "din_instante"
 
 # Column to be used as the value to be predicted
 target_column = "val_fatorcapacidade"
+
+# DateTime Format
+datetime_format = "%Y-%m-%d %H:%M:%S"
