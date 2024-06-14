@@ -16,6 +16,11 @@ import utility.utils as utils
 
 def perform_eda():
     utils.create_and_check_directory(OUTPUT_EDA_REPORT_PATH)
+    
+    # If the file already exists, skip the EDA
+    if utils.check_file_exists(utils.join_file_path(OUTPUT_EDA_REPORT_PATH, OUTPUT_EDA_REPORT_FILENAME)):
+        logger.info("EDA Report already exists. Skipping EDA")
+        return
 
     logger.info("Performing Exploratory Data Analysis (EDA)")
 
