@@ -36,8 +36,9 @@ def apply_classical_pca(df, n_components=None):
     sorted_indices = np.argsort(eig_vals)[::-1]
     eig_vals = eig_vals[sorted_indices]
     eig_vecs = eig_vecs[:, sorted_indices]
-    logger.debug(f"Eigenvalues: {eig_vals}")
-    logger.debug(f"Eigenvectors: {eig_vecs}")
+    # FIXME: Uncomment the following lines to debug the eigenvalues and eigenvectors
+    # logger.debug(f"Eigenvalues: {eig_vals}")
+    # logger.debug(f"Eigenvectors: {eig_vecs}")
 
     # Calculate the explained variance ratio
     total = sum(eig_vals)
