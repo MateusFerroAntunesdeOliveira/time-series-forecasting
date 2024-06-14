@@ -6,16 +6,18 @@ import feature_engineering.feature_selection as feature_selection
 import feature_engineering.pca_analysis as pca_analysis
 import feature_engineering.autoencoder_analysis as autoencoder_analysis
 import exploratory_data_analysis.data_exploration as data_exploration
+import forecasting.lstm_time_series as lstm_time_series
 
 def main():
-    process_data.process_files()
-    data_cleaning.clean_data()
-    data_visualization.apply_measures()
-    feature_prediction.apply_feature_prediction_classification()
-    feature_selection.apply_feature_selection()
-    pca_analysis.apply_pca_analysis()
-    autoencoder_analysis.apply_autoencoder_analysis()
-    data_exploration.explore_data()
+    # process_data.process_files()
+    # data_cleaning.clean_data()
+    # data_visualization.apply_measures()
+    # feature_prediction.apply_feature_prediction_classification()
+    # feature_selection.apply_feature_selection()
+    # pca_analysis.apply_pca_analysis()
+    # autoencoder_analysis.apply_autoencoder_analysis()
+    # data_exploration.explore_data()
+    lstm_time_series.apply_lstm_forecasting()
 
 if __name__ == "__main__":
     main()

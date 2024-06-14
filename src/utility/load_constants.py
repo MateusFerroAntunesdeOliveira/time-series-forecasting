@@ -22,6 +22,12 @@ target_column = "val_fatorcapacidade"
 # DateTime Format
 datetime_format = "%Y-%m-%d %H:%M:%S"
 
+# Train and Test Periods
+train_start = '2022-01-01'
+train_end = '2023-12-31'
+test_start = '2024-01-01'
+test_end = '2024-05-31'
+
 # Autoencoder Parameters
 encoding_dimension = 2
 encoding_activation = "relu"
@@ -30,3 +36,12 @@ optimizer = "adam"
 loss_function = "mse"
 epochs = 50
 batch_size = 256
+
+# LSTM Parameters
+lstm_sequence_length = 12
+lstm_units = 50
+lstm_activation_function = "linear"
+lstm_optimizer = "adam"
+lstm_loss_function = "mean_squared_error"
+lstm_epochs = 10
+lstm_batch_size = 32
