@@ -21,3 +21,12 @@ target_column = "val_fatorcapacidade"
 
 # DateTime Format
 datetime_format = "%Y-%m-%d %H:%M:%S"
+
+# Autoencoder Parameters
+encoding_dimension = 2
+encoding_activation = "relu"
+decoding_activation = "sigmoid"
+optimizer = "adam"
+loss_function = "mse"
+epochs = 50
+batch_size = 256

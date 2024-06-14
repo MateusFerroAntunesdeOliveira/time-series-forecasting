@@ -57,6 +57,9 @@ if root_logger.handlers:
 logging.getLogger('matplotlib').setLevel(logging.WARNING)
 logging.getLogger('PIL.PngImagePlugin').setLevel(logging.WARNING)
 
+# Exclude TensorFlow informational logs - Set TensorFlow log level to WARN to ignore INFO and DEBUG messages
+os.environ['TF_CPP_MIN_LOG_LEVEL'] = '2'
+
 # Create a new handler and set the colored formatter
 handler = logging.StreamHandler()
 handler.setFormatter(formatter)
