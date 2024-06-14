@@ -6,3 +6,5 @@ scikit-learn
 ppscore
 numba==0.58.1
 ydata-profiling
+tensorflow==2.7.0
+cloud-tpu-client
