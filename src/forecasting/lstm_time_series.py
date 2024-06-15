@@ -62,12 +62,18 @@ def apply_lstm_forecasting():
 
     train_data, test_data = split_dataset(scaled_data, train_start_idx, train_end_idx, test_start_idx, test_end_idx)
 
+    logger.info(f"Train data shape: {train_data.shape}")
+    logger.info(f"Test data shape: {test_data.shape}")
+
     # Define the length of the input sequences
     sequence_length = constants.lstm_sequence_length
 
     # Create train and test sequences
     X_train, y_train = create_sequences(train_data, sequence_length)
     X_test, y_test = create_sequences(test_data, sequence_length)
+
+    logger.info(f"X_train shape: {X_train.shape}, y_train shape: {y_train.shape}")
+    logger.info(f"X_test shape: {X_test.shape}, y_test shape: {y_test.shape}")
 
     # Reshape the input sequences in the form accepted by the LSTM - [samples, time steps, features]
     X_train = X_train.reshape(X_train.shape[0], X_train.shape[1], 1)
@@ -106,3 +112,23 @@ def apply_lstm_forecasting():
     plt.legend()
     plt.grid(True)
     plt.show()
+    
+    # Plot the results for the last week of May 2024
+    last_week_start = pd.to_datetime("2024-05-22 00:00:00")
+    last_week_end = pd.to_datetime("2024-05-28 23:00:00")
+    last_week_start_idx = df.index.get_loc(last_week_start, method='nearest')
+    last_week_end_idx = df.index.get_loc(last_week_end, method='nearest') + 1
+
+    last_week_real = df[constants.target_column][last_week_start:last_week_end]
+    last_week_predictions = predictions[-len(last_week_real):, 0]
+
+    plt.figure(figsize=(14, 6))
+    plt.plot(last_week_real.index, last_week_real.values, label='Valor Real')
+    plt.plot(last_week_real.index, last_week_predictions, label='Valor Previsto', linestyle='dashed')
+    plt.title('Previsão de Fator de Capacidade para a Última Semana de Maio de 2024')
+    plt.xlabel('Tempo (horas)')
+    plt.ylabel('Val_fatorcapacidade (MW/MW)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
