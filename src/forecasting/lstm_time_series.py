@@ -1,18 +1,10 @@
-import sys
-import os
-
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import MinMaxScaler
-
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
-
-# Define file paths
-current_dir = os.path.dirname(os.path.abspath(__file__))
-sys.path.append(current_dir)
 
 from utility.config import logger, OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME
 import utility.load_constants as constants
@@ -91,7 +83,7 @@ def apply_lstm_forecasting(future_hours):
     # Define the LSTM model
     model = Sequential([
         LSTM(input_shape=(X_train.shape[1], 1), units=constants.lstm_units),
-        Dense(future_hours), # Output layer with the number of future predictions
+        Dense(future_hours),  # Output layer predicts 'future_hours' steps ahead
     ])
 
     # Compile & Train the model
@@ -125,6 +117,8 @@ def apply_lstm_forecasting(future_hours):
     # Plot the results for the last week of May 2024
     last_week_start = pd.to_datetime("2024-05-22 00:00:00")
     last_week_end = pd.to_datetime("2024-05-28 23:00:00")
+    last_week_start_idx = df.index.get_loc(last_week_start, method='nearest')
+    last_week_end_idx = df.index.get_loc(last_week_end, method='nearest') + 1
 
     last_week_real = df[constants.target_column][last_week_start:last_week_end]
     last_week_predictions = predictions[-len(last_week_real):, 0]
@@ -144,7 +138,7 @@ def apply_lstm_forecasting(future_hours):
     last_sequence = last_sequence.reshape((1, sequence_length, 1))
 
     future_predictions = []
-    for _ in range(future_hours):  # Predicting 24 hours ahead
+    for _ in range(future_hours):  # Predicting 'future_hours' ahead
         next_pred = model.predict(last_sequence)
         future_predictions.append(next_pred[0, 0])  # Take the first value of the prediction
         next_pred = next_pred[0, 0].reshape((1, 1, 1))
@@ -160,9 +154,8 @@ def apply_lstm_forecasting(future_hours):
     future_dates = pd.date_range(start=last_week_end + pd.Timedelta(hours=1), periods=future_hours, freq='H')
     extended_index = last_week_real.index.append(future_dates)
 
-    future_text = get_future_text(future_hours)
-
     # Plot the results including the future prediction
+    future_text = get_future_text(future_hours)
     plt.figure(figsize=(14, 6))
     plt.plot(extended_index[:len(last_week_real)], last_week_real.values, label='Valor Real')
     plt.plot(extended_index, extended_predictions, label='Valor Previsto e Previsão Futura', linestyle='dashed')
