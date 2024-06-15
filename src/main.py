@@ -17,7 +17,10 @@ def main():
     # pca_analysis.apply_pca_analysis()
     # autoencoder_analysis.apply_autoencoder_analysis()
     # data_exploration.explore_data()
-    lstm_time_series.apply_lstm_forecasting()
+    lstm_time_series.apply_lstm_forecasting(1)
+    lstm_time_series.apply_lstm_forecasting(12)
+    lstm_time_series.apply_lstm_forecasting(24)
+    lstm_time_series.apply_lstm_forecasting(48)
 
 if __name__ == "__main__":
     main()

@@ -46,7 +46,16 @@ def convert_string_to_datetime_and_add_index_position(df, train_start, train_end
 
     return train_start_idx, train_end_idx, test_start_idx, test_end_idx
 
-def apply_lstm_forecasting():
+def get_future_text(future_hours):
+    hour_mapping = {
+        1: "1 hora",
+        12: "12 horas",
+        24: "1 dia",
+        48: "2 dias"
+    }
+    return hour_mapping.get(future_hours, f"{future_hours} horas")
+
+def apply_lstm_forecasting(future_hours):
     df = load_data(utils.join_file_path(OUTPUT_MERGED_PATH, OUTPUT_FILTERED_MERGED_FILENAME), constants.reading_date_column, constants.reading_date_column)
     series = df[constants.target_column]
 
@@ -82,7 +91,7 @@ def apply_lstm_forecasting():
     # Define the LSTM model
     model = Sequential([
         LSTM(input_shape=(X_train.shape[1], 1), units=constants.lstm_units),
-        Dense(24),  # Output layer with 24 units for 24-hour forecast
+        Dense(future_hours), # Output layer with the number of future predictions
     ])
 
     # Compile & Train the model
@@ -116,8 +125,6 @@ def apply_lstm_forecasting():
     # Plot the results for the last week of May 2024
     last_week_start = pd.to_datetime("2024-05-22 00:00:00")
     last_week_end = pd.to_datetime("2024-05-28 23:00:00")
-    last_week_start_idx = df.index.get_loc(last_week_start, method='nearest')
-    last_week_end_idx = df.index.get_loc(last_week_end, method='nearest') + 1
 
     last_week_real = df[constants.target_column][last_week_start:last_week_end]
     last_week_predictions = predictions[-len(last_week_real):, 0]
@@ -137,7 +144,7 @@ def apply_lstm_forecasting():
     last_sequence = last_sequence.reshape((1, sequence_length, 1))
 
     future_predictions = []
-    for _ in range(24):  # Predicting 24 hours ahead
+    for _ in range(future_hours):  # Predicting 24 hours ahead
         next_pred = model.predict(last_sequence)
         future_predictions.append(next_pred[0, 0])  # Take the first value of the prediction
         next_pred = next_pred[0, 0].reshape((1, 1, 1))
@@ -150,19 +157,18 @@ def apply_lstm_forecasting():
     extended_predictions = np.concatenate([last_week_predictions, future_predictions.flatten()])
 
     # Create index for future dates
-    future_dates = pd.date_range(start=last_week_end + pd.Timedelta(hours=1), periods=24, freq='H')
+    future_dates = pd.date_range(start=last_week_end + pd.Timedelta(hours=1), periods=future_hours, freq='H')
     extended_index = last_week_real.index.append(future_dates)
+
+    future_text = get_future_text(future_hours)
 
     # Plot the results including the future prediction
     plt.figure(figsize=(14, 6))
     plt.plot(extended_index[:len(last_week_real)], last_week_real.values, label='Valor Real')
     plt.plot(extended_index, extended_predictions, label='Valor Previsto e Previsão Futura', linestyle='dashed')
-    plt.title('Previsão de Fator de Capacidade para a Última Semana de Maio de 2024 e 1 Dia Futuro')
+    plt.title(f'Previsão de Fator de Capacidade para a Última Semana de Maio de 2024 e {future_text} Futuro')
     plt.xlabel('Tempo (horas)')
     plt.ylabel('Val_fatorcapacidade (MW/MW)')
     plt.legend()
     plt.grid(True)
     plt.show()
-
-if __name__ == "__main__":
-    apply_lstm_forecasting()
