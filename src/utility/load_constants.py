@@ -45,3 +45,12 @@ lstm_optimizer = "adam"
 lstm_loss_function = "mean_squared_error"
 lstm_epochs = 10
 lstm_batch_size = 32
+
+# Gru Parameters
+gru_sequence_length = 12
+gru_units = 50
+gru_activation_function = "linear"
+gru_optimizer = "adam"
+gru_loss_function = "mean_squared_error"
+gru_epochs = 10
+gru_batch_size = 32
