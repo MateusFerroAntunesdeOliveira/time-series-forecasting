@@ -132,3 +132,37 @@ def apply_lstm_forecasting():
     plt.grid(True)
     plt.show()
 
+    # Future prediction for one day ahead
+    last_sequence = test_data[-sequence_length:]  # Last sequence from the test data
+    last_sequence = last_sequence.reshape((1, sequence_length, 1))
+
+    future_predictions = []
+    for _ in range(24):  # Predicting 24 hours ahead
+        next_pred = model.predict(last_sequence)
+        future_predictions.append(next_pred[0, 0])  # Take the first value of the prediction
+        next_pred = next_pred[0, 0].reshape((1, 1, 1))
+        last_sequence = np.append(last_sequence[:, 1:, :], next_pred, axis=1)
+
+    # Invert the normalization for future predictions
+    future_predictions = scaler.inverse_transform(np.array(future_predictions).reshape(-1, 1))
+
+    # Combine last week's real values, predictions and future predictions
+    extended_predictions = np.concatenate([last_week_predictions, future_predictions.flatten()])
+
+    # Create index for future dates
+    future_dates = pd.date_range(start=last_week_end + pd.Timedelta(hours=1), periods=24, freq='H')
+    extended_index = last_week_real.index.append(future_dates)
+
+    # Plot the results including the future prediction
+    plt.figure(figsize=(14, 6))
+    plt.plot(extended_index[:len(last_week_real)], last_week_real.values, label='Valor Real')
+    plt.plot(extended_index, extended_predictions, label='Valor Previsto e Previsão Futura', linestyle='dashed')
+    plt.title('Previsão de Fator de Capacidade para a Última Semana de Maio de 2024 e 1 Dia Futuro')
+    plt.xlabel('Tempo (horas)')
+    plt.ylabel('Val_fatorcapacidade (MW/MW)')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
+
+if __name__ == "__main__":
+    apply_lstm_forecasting()
