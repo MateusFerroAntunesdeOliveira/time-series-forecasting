@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 from sklearn.preprocessing import MinMaxScaler
+from sklearn.metrics import mean_absolute_error, mean_squared_error
 from keras.models import Sequential
 from keras.layers import LSTM, Dense
 
@@ -48,7 +49,7 @@ def apply_lstm_forecasting(future_hours):
     # Define the LSTM model
     model = Sequential([
         LSTM(input_shape=(X_train.shape[1], 1), units=constants.lstm_units),
-        Dense(future_hours),  # Output layer predicts 'future_hours' steps ahead
+        Dense(1) # Output layer predicts 1 step ahead
     ])
 
     # Compile & Train the model
@@ -61,17 +62,26 @@ def apply_lstm_forecasting(future_hours):
     logger.info(f"Train Score: {train_score:.4f}")
     logger.info(f"Test Score: {test_score:.4f}")
 
-    # Make predictions
+    # Make predictions for test data
     predictions = model.predict(X_test)
 
     # Invert the normalization to get the actual values
     predictions = scaler.inverse_transform(predictions)
     y_test_inv = scaler.inverse_transform(y_test)
 
+    # Calculate performance metrics for the test data
+    mae_test = mean_absolute_error(y_test_inv, predictions)
+    mse_test = mean_squared_error(y_test_inv, predictions)
+    rmse_test = np.sqrt(mse_test)
+
+    logger.info(f"Test MAE: {mae_test:.4f}")
+    logger.info(f"Test MSE: {mse_test:.4f}")
+    logger.info(f"Test RMSE: {rmse_test:.4f}")
+
     # Plot the results for the test period
     plt.figure(figsize=(14, 6))
     plt.plot(df.index[test_start_idx + sequence_length:test_end_idx], y_test_inv, label='Valor Real')
-    plt.plot(df.index[test_start_idx + sequence_length:test_end_idx], predictions[:, 0], label='Valor Previsto', linestyle='dashed')
+    plt.plot(df.index[test_start_idx + sequence_length:test_end_idx], predictions, label='Valor Previsto', linestyle='dashed')
     plt.title('Previsão de Fator de Capacidade com LSTM')
     plt.xlabel('Tempo (horas)')
     plt.ylabel('Valor Fator de Capacidade (MW/MW)')
@@ -86,7 +96,7 @@ def apply_lstm_forecasting(future_hours):
     last_week_end_idx = df.index.get_loc(last_week_end, method='nearest') + 1
 
     last_week_real = df[constants.target_column][last_week_start:last_week_end]
-    last_week_predictions = predictions[-len(last_week_real):, 0]
+    last_week_predictions = predictions[-len(last_week_real):]
 
     plt.figure(figsize=(14, 6))
     plt.plot(last_week_real.index, last_week_real.values, label='Valor Real')
@@ -98,22 +108,21 @@ def apply_lstm_forecasting(future_hours):
     plt.grid(True)
     plt.show()
 
-    # Future prediction for one day ahead
-    last_sequence = test_data[-sequence_length:]  # Last sequence from the test data
-    last_sequence = last_sequence.reshape((1, sequence_length, 1))
-
+    # Future prediction for future_hours ahead
     future_predictions = []
-    for _ in range(future_hours):  # Predicting 'future_hours' ahead
+    last_sequence = test_data[-sequence_length:].reshape((1, sequence_length, 1))
+
+    for _ in range(future_hours):
         next_pred = model.predict(last_sequence)
-        future_predictions.append(next_pred[0, 0])  # Take the first value of the prediction
-        next_pred = next_pred[0, 0].reshape((1, 1, 1))
-        last_sequence = np.append(last_sequence[:, 1:, :], next_pred, axis=1)
+        future_predictions.append(next_pred[0, 0])
+        last_sequence = np.roll(last_sequence, -1, axis=1)
+        last_sequence[0, -1, 0] = next_pred
 
     # Invert the normalization for future predictions
     future_predictions = scaler.inverse_transform(np.array(future_predictions).reshape(-1, 1))
 
     # Combine last week's real values, predictions and future predictions
-    extended_predictions = np.concatenate([last_week_predictions, future_predictions.flatten()])
+    extended_predictions = np.concatenate([last_week_predictions.flatten(), future_predictions.flatten()])
 
     # Create index for future dates
     future_dates = pd.date_range(start=last_week_end + pd.Timedelta(hours=1), periods=future_hours, freq='H')
@@ -124,7 +133,7 @@ def apply_lstm_forecasting(future_hours):
     plt.figure(figsize=(14, 6))
     plt.plot(extended_index[:len(last_week_real)], last_week_real.values, label='Valor Real')
     plt.plot(extended_index, extended_predictions, label='Valor Previsto e Previsão Futura', linestyle='dashed')
-    plt.title(f'Previsão de Fator de Capacidade para a Última Semana de Maio de 2024 e {future_text} Futuro')
+    plt.title(f'Previsão de Fator de Capacidade para a Última Semana de Maio de 2024 e {future_text} Futuro com LSTM')
     plt.xlabel('Tempo (horas)')
     plt.ylabel('Valor Fator de Capacidade (MW/MW)')
     plt.legend()
