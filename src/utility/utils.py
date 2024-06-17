@@ -36,12 +36,13 @@ def split_dataset_into_train_and_test(dataset, train_start_idx, train_end_idx, t
     test_data = dataset[test_start_idx:test_end_idx]
     return train_data, test_data
 
-def create_sequences_to_forecasting(data, seq_length):
-    X, y = [], []
-    for i in range(len(data) - seq_length):
-        X.append(data[i:i + seq_length])
-        y.append(data[i + seq_length])
-    return np.array(X), np.array(y)
+# Create sequences for forecasting - X is the input sequence (lag) and y is the output sequence (target)
+def create_sequences_to_forecasting(data, sequence_length):
+    input_sequence, labels = [], []
+    for i in range(len(data) - sequence_length):
+        input_sequence.append(data[i:i + sequence_length])
+        labels.append(data[i + sequence_length])
+    return np.array(input_sequence), np.array(labels)
 
 def convert_string_to_datetime_and_add_index_position(df, train_start, train_end, test_start, test_end):
     train_start_idx = df.index.get_loc(pd.to_datetime(train_start), method='nearest')

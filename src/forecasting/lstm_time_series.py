@@ -31,7 +31,7 @@ def apply_lstm_forecasting(future_hours):
     logger.info(f"Train data shape: {train_data.shape}")
     logger.info(f"Test data shape: {test_data.shape}")
 
-    # Define the length of the input sequences
+    # Define the length of the input sequences - lag
     sequence_length = constants.lstm_sequence_length
 
     # Create train and test sequences
