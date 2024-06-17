@@ -2,6 +2,8 @@ import os
 import pandas as pd
 import numpy as np
 
+from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
+
 from utility.config import logger
 
 def create_and_check_directory(directory):
@@ -57,3 +59,25 @@ def get_future_text(future_hours):
         48: "2 dias"
     }
     return hour_mapping.get(future_hours, f"{future_hours} horas")
+
+def mape(y_true, y_pred):
+    epsilon = 1e-10
+    y_true, y_pred = np.array(y_true), np.array(y_pred)
+    y_true = y_true + epsilon
+    ape = np.abs((y_true - y_pred) / y_true)
+    return np.mean(ape) * 100
+
+def smape(y_true, y_pred):
+    denominator = (np.abs(y_true) + np.abs(y_pred)) / 2.0
+    diff = np.abs(y_true - y_pred) / denominator
+    diff[denominator == 0] = 0.0
+    return np.mean(diff) * 100
+
+def calculate_metrics(y_true, y_pred):
+    mae = mean_absolute_error(y_true, y_pred)
+    mse = mean_squared_error(y_true, y_pred)
+    rmse = np.sqrt(mse)
+    r2 = r2_score(y_true, y_pred)
+    mape_score = mape(y_true, y_pred)
+    smape_score = smape(y_true, y_pred)
+    return mae, mse, rmse, r2, mape_score, smape_score

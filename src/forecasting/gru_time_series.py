@@ -70,13 +70,13 @@ def apply_gru_forecasting(future_hours):
     y_test_inv = scaler.inverse_transform(y_test)
 
     # Calculate performance metrics for the test data
-    mae_test = mean_absolute_error(y_test_inv, predictions)
-    mse_test = mean_squared_error(y_test_inv, predictions)
-    rmse_test = np.sqrt(mse_test)
-
+    mae_test, mse_test, rmse_test, r2_test, mape_test, smape_test = utils.calculate_metrics(y_test_inv, predictions)
     logger.info(f"Test MAE: {mae_test:.4f}")
     logger.info(f"Test MSE: {mse_test:.4f}")
     logger.info(f"Test RMSE: {rmse_test:.4f}")
+    logger.info(f"Test R2: {r2_test:.4f}")
+    logger.debug(f"Test MAPE: {mape_test:.4f}")
+    logger.info(f"Test SMAPE: {smape_test:.4f}")
 
     # Plot the results for the test period
     plt.figure(figsize=(14, 6))
