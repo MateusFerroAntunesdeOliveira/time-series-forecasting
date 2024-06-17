@@ -27,7 +27,7 @@ def main():
     # gru_time_series.apply_gru_forecasting(12)
     # gru_time_series.apply_gru_forecasting(24)
     # gru_time_series.apply_gru_forecasting(48)
-    arima_time_series.apply_arima_forecasting(1)
+    # arima_time_series.apply_arima_forecasting(1)
 
 if __name__ == "__main__":
     main()
