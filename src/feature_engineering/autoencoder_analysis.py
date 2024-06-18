@@ -49,16 +49,16 @@ def apply_encoder(df):
     # Get the encoded (reduced) data
     encoder_model = Model(inputs=input_layer, outputs=encoder)
     encoded_data = encoder_model.predict(df_scaled)
-    
+
     logger.debug(f"Encoded data shape: {encoded_data.shape}")
 
     return encoded_data
 
 def visualize_encoded_data(encoded_data):
     plt.scatter(encoded_data[:, 0], encoded_data[:, 1])
-    plt.title("Encoded Data")
-    plt.xlabel("Component 1")
-    plt.ylabel("Component 2")
+    plt.title("Dados Codificados")
+    plt.xlabel("Componente 1")
+    plt.ylabel("Componente 2")
     plt.show()
 
 def apply_autoencoder_analysis():
