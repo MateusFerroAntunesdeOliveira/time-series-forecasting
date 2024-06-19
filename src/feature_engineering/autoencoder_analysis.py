@@ -37,24 +37,28 @@ def apply_encoder(df):
 
     # Define the autoencoder architecture
     input_layer = Input(shape=(input_dim,))
-    encoder = Dense(encoding_dimension, activation=encoding_activation)(input_layer)
-    decoder = Dense(input_dim, activation=decoding_activation)(encoder)
+    encoding_layer = Dense(encoding_dimension, activation=encoding_activation)(input_layer)
+    decoding_layer = Dense(input_dim, activation=decoding_activation)(encoding_layer)
 
-    autoencoder = Model(inputs=input_layer, outputs=decoder)
+    # Create the Autoencoder / Encoder Model
+    autoencoder = Model(inputs=input_layer, outputs=decoding_layer)
+    encoder = Model(inputs=input_layer, outputs=encoding_layer)
+
+    # Compile and Train the Autoencoder
     autoencoder.compile(optimizer=optimizer, loss=loss_function)
-
-    # Train the autoencoder
     autoencoder.fit(df_scaled, df_scaled, epochs=epochs, batch_size=batch_size, shuffle=True, verbose=1)
 
     # Get the encoded (reduced) data
-    encoder_model = Model(inputs=input_layer, outputs=encoder)
-    encoded_data = encoder_model.predict(df_scaled)
-
+    encoded_data = encoder.predict(df_scaled)
     logger.debug(f"Encoded data shape: {encoded_data.shape}")
 
     return encoded_data
 
 def visualize_encoded_data(encoded_data):
+    if encoded_data.shape[1] < 2:
+        logger.error("Encoded data has less than 2 dimensions, cannot visualize")
+        return
+    
     plt.scatter(encoded_data[:, 0], encoded_data[:, 1])
     plt.title("Dados Codificados")
     plt.xlabel("Componente 1")
