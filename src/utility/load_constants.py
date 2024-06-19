@@ -38,19 +38,19 @@ epochs = 50
 batch_size = 256
 
 # LSTM Parameters
-lstm_sequence_length = 12
 lstm_units = 50
 lstm_activation_function = "linear"
 lstm_optimizer = "adam"
 lstm_loss_function = "mean_squared_error"
-lstm_epochs = 10
-lstm_batch_size = 32
+lstm_epochs = 30
+lstm_batch_size = 128
+lstm_sequence_length = 12
 
 # Gru Parameters
-gru_sequence_length = 12
 gru_units = 50
 gru_activation_function = "linear"
 gru_optimizer = "adam"
 gru_loss_function = "mean_squared_error"
-gru_epochs = 10
-gru_batch_size = 32
+gru_epochs = 30
+gru_batch_size = 128
+gru_sequence_length = 12
